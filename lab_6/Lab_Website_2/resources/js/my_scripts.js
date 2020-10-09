@@ -79,14 +79,20 @@ function changeColor(color) {
 function loadStatsPage() {
 	var table = document.getElementById("stats_table");
 	var row_counter;
-	var col_counter;
-	var cell_value;
+	var home;
+	var home_wins = 0;
+	var opp;
+	var opp_wins = 0;
 
-	for(row_counter = 0; row_counter < table.rows.length; row_counter++) {
-		for(col_counter = 2; col_counter < table.rows[row_counter].cells.length-2; col_counter++) {
-			cell_value = table.rows[row_counter].cells[col_counter].innerHTML; //Read in Team Name
-			cell_value = parseInt(cell_value) + 2;//Increase the cell's value by 2
-			table.rows[row_counter].cells[col_counter].innerHTML = cell_value;//Update the actual html of the cell
+	for(row_counter = 2; row_counter < table.rows.length; row_counter) {
+		home = parseInt(table.rows[row_counter].cells[2].innerHTML);
+		opp = parseInt(table.rows[row_counter].cells[3].innerHTML);
+		if(home < opp) {
+			table.rows[row_counter].cells[4].innerHTML = table.rows[row_counter].cells[1].innerHTML;
+			opp_wins++;
+		} else {
+			table.rows[row_counter].cells[4].innerHTML = "CU Boulder";
+			home_wins++;
 		}
 	}
 }
@@ -136,30 +142,26 @@ function loadStatsPage() {
 					  avg_rec_yards - the average number of receiving yards for the player's Buff career
 */ 
 function loadPlayers() {
-	player = [
-		{p_name: 'John Doe', p_year: 'Sophmore',p_major: 'Science',g_played: '17',player_img: 'https://pixels.com/featured/american-football-running-back-ball-cartoon-aloysius-patrimonio.html', 
-			player_img_alt: 'Running-back-cartoon', p_yards: '34', r_yards:'33',rec_yards: '20', avg_p_yards: '23', avg_r_yards: '20', avg_rec_yards: '21'},
-		{p_name: 'John Wick', p_year: 'Junior',p_major: 'Art',g_played: '15',player_img: 'https://www.vectorstock.com/royalty-free-vector/american-football-wide-receiver-running-ball-vector-1878129', 
-			player_img_alt: 'Receiver-football', p_yards: '30', r_yards:'38',rec_yards: '25', avg_p_yards: '27', avg_r_yards: '25', avg_rec_yards: '27'},
-		{p_name: 'Gary Nelson', p_year: 'Freshman',p_major: 'Computer Science',g_played: '10',player_img: 'https://www.lequzhai.com/group/how-to-draw-a-cartoon-football-player/', 
-			player_img_alt: 'Cartoon-Football-Player', p_yards: '40', r_yards:'43',rec_yards: '30', avg_p_yards: '26', avg_r_yards: '30', avg_rec_yards: '30'},
-		{p_name: 'Some Dood', p_year: 'Junior',p_major: 'Astrology',g_played: '16',player_img: 'https://www.istockphoto.com/vector/tailback-football-player-running-gm156612456-9373424', 
-			player_img_alt: 'Tailback-running', p_yards: '33', r_yards:'40',rec_yards: '40', avg_p_yards: '33', avg_r_yards: '40', avg_rec_yards: '32'},
-	]
-
+	var player = "";
 	var i;
-	for(i = 0; i < player.length; i++) {
-		var myDiv = document.getElementById('player_selector');
-		var aTag = document.createElement('a');
-		aTag.setAttribute('href','#');
-		aTag.innerText = player[i].p_name;
-		myDiv.appendChild(aTag);
 
-		aTag.onclick = switchPlayer(player[i]);
+	for(i = 0; i < players.length; i++) {
+		player = player + "<a href='#' class='dropdown-item' onclick='switchPlayer(" + i + ")'>" + players[i].name + "</a>";
 	}
+
+	document.getElementById("player_selector").innerHTML = player;
 }
 				
 function switchPlayer(playerNum) {
-	document.getElementById('p_year').innerHTML = player[playerNum].p_year;
-	document.getElementById('p_major').innerHTML = player[playerNum].p_major;
+	document.getElementById("p_year").innerHTML = players[playerNum].year;
+	document.getElementById("p_major").innerHTML = players[playerNum].major;
+	document.getElementById("g_played").innerHTML = players[playerNum].games_played;
+	document.getElementById("player_img").src = players[playerNum].img;
+	document.getElementById("player_img").alt = players[playerNum].alt;
+	document.getElementById("p_yards").innerHTML = players[playerNum].pass_yards;
+	document.getElementById("r_yards").innerHTML = players[playerNum].rushing_yards;
+	document.getElementById("rec_yards").innerHTML = players[playerNum].receiving_yards;
+	document.getElementById("avg_p_yards").innerHTML = Math.floor(players[playerNum].pass_yards / players[playerNum].games_played);
+	document.getElementById("avg_r_yards").innerHTML = Math.floor(players[playerNum].rushing_yards / players[playerNum].games_played);
+	document.getElementById("avg_p_yards").innerHTML = Math.floor(players[playerNum].receiving_yards / players[playerNum].games_played);
 }
